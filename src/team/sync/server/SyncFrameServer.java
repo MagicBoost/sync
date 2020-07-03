@@ -22,11 +22,9 @@ public class SyncFrameServer extends JFrame {
     JLabel iPLabel = new JLabel("数据资源所属IP", SwingConstants.RIGHT);
     JLabel portLabel = new JLabel("端口号", SwingConstants.RIGHT);
     JLabel pathLabel = new JLabel("路径", SwingConstants.RIGHT);
-    JLabel optionLabel = new JLabel("同步选项", SwingConstants.RIGHT);
     JTextField iPText = new JTextField();
     JTextField portText = new JTextField();
     JTextField pathText = new JTextField();
-    JComboBox<String> optionComboBox = new JComboBox<String>();
 
     JPanel buttonPanel = new JPanel();
     JButton syncButton = new JButton("sync");
@@ -35,15 +33,11 @@ public class SyncFrameServer extends JFrame {
         //set component
         iPText.setText("127.0.0.1");
         portText.setText("5000");
-        optionComboBox.addItem("实时同步");
-        optionComboBox.addItem("每30秒同步");
-        optionComboBox.addItem("每小时同步");
-        optionComboBox.addItem("每天同步");
 
         //Layout
         this.setLayout(new BorderLayout(5, 5));
         infoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        mainPanel.setLayout(new GridLayout(4, 2, 5, 5));
+        mainPanel.setLayout(new GridLayout(3, 2, 5, 5));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         //add Component
@@ -54,8 +48,6 @@ public class SyncFrameServer extends JFrame {
         mainPanel.add(portText);
         mainPanel.add(pathLabel);
         mainPanel.add(pathText);
-        mainPanel.add(optionLabel);
-        mainPanel.add(optionComboBox);
         buttonPanel.add(syncButton);
 
         this.add(infoPanel, BorderLayout.NORTH);
@@ -71,8 +63,8 @@ public class SyncFrameServer extends JFrame {
         });
 
         //set Frame
-        this.setTitle("文件同步");
-        this.setSize(300, 250);
+        this.setTitle("文件同步服务端");
+        this.setSize(300, 200);
         this.setResizable(false);
         this.getContentPane().setBackground(Color.white);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -88,15 +80,13 @@ public class SyncFrameServer extends JFrame {
                 String ip = iPText.getText();
                 int port = Integer.parseInt(portText.getText());
                 String path = pathText.getText();
-                String option = optionComboBox.getSelectedItem().toString();
 
                 //current options must be different from running and temp options
-                if (!ip.equals(runningIp) || port != runningPort || !path.equals(runningPath) || !option.equals(runningOption)) {
-                    if (!ip.equals(tempIp) || port != tempPort || !path.equals(tempPath) || !option.equals(tempOption)) {
+                if (!ip.equals(runningIp) || port != runningPort || !path.equals(runningPath)) {
+                    if (!ip.equals(tempIp) || port != tempPort || !path.equals(tempPath)) {
                         tempIp = ip;
                         tempPort = port;
                         tempPath = path;
-                        tempOption = option;
 
                         //check lock
                         while (syncBool != true) {
@@ -105,7 +95,7 @@ public class SyncFrameServer extends JFrame {
                         syncBool = false;
 
                         //insure current thread's sync options will not be covered
-                        if (ip.equals(tempIp) && port == tempPort && path.equals(tempPath) && option.equals(tempOption)) {
+                        if (ip.equals(tempIp) && port == tempPort && path.equals(tempPath)) {
                             runningIp = tempIp;
                             runningPort = tempPort;
                             runningPath = tempPath;
@@ -118,11 +108,8 @@ public class SyncFrameServer extends JFrame {
                             //check other threads require
                             while (tempIp == null && tempPort == 0 && tempPath == null && tempOption == null) {
                                 infoLabel.setText("同步中");
-                                //TODO 此处添加同步操作
-
                                 TCPServerFile fileServer = new TCPServerFile(port, path);
                                 fileServer.serverStart();
-
                             }
                             syncBool = true;
 

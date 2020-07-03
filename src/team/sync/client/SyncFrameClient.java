@@ -71,7 +71,7 @@ public class SyncFrameClient extends JFrame {
         });
 
         //set Frame
-        this.setTitle("文件同步");
+        this.setTitle("文件同步客户端");
         this.setSize(300, 250);
         this.setResizable(false);
         this.getContentPane().setBackground(Color.white);
@@ -118,16 +118,17 @@ public class SyncFrameClient extends JFrame {
                             //check other threads require
                             while (tempIp == null && tempPort == 0 && tempPath == null && tempOption == null) {
                                 infoLabel.setText("同步中");
-                                //TODO 此处添加同步操作
-
                                 TCPClientFile fileClient = new TCPClientFile(port, path);
                                 fileClient.clientStart();
 
-                                infoLabel.setText("同步暂停");
-                                if (option.equals("实时同步")) Thread.sleep(10000);
-                                else if (option.equals("每30秒同步")) Thread.sleep(30000);
-                                else if (option.equals("每小时同步")) Thread.sleep(3600000);
-                                else Thread.sleep(86400000);
+                                //avoid last wait
+                                if (tempIp == null && tempPort == 0 && tempPath == null && tempOption == null) {
+                                    infoLabel.setText("同步暂停");
+                                    if (option.equals("实时同步")) Thread.sleep(10000);
+                                    else if (option.equals("每30秒同步")) Thread.sleep(30000);
+                                    else if (option.equals("每小时同步")) Thread.sleep(3600000);
+                                    else Thread.sleep(86400000);
+                                }
                             }
                             syncBool = true;
 
