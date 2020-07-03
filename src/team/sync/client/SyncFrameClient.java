@@ -85,16 +85,19 @@ public class SyncFrameClient extends JFrame{
             System.out.println(option);
             // TODO 应根据option增加关于同步时间的操作
             // TODO 是否需要使用多线程?不适用多线程会导致swing绘制线程堵塞，无法更改Label文本
-            TCPClientFile fileClient = new TCPClientFile(port, path);
-            fileClient.createSocket();
-            fileClient.receiveDirStruct();
-            fileClient.receiveFile();
+
+            int sleepTime;
+            if (option.equals("实时同步")) sleepTime = 10000;
+            else if (option.equals("每小时同步")) sleepTime = 3600000;
+            else sleepTime = 86400000;
+
+            ClientFileThread clientThread = new ClientFileThread(port, path, sleepTime);
+            clientThread.start();
         }
     }
 
 
     public static void main(String[] args) {
         new SyncFrameClient();
-
     }
 }

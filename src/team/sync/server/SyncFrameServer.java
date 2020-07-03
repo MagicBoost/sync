@@ -85,16 +85,13 @@ public class SyncFrameServer extends JFrame{
             infoLabel.repaint();
             //System.out.println(option);
             //TODO 此处加同步操作
-            TCPServerFile fileServer = new TCPServerFile(port, path);
-            fileServer.createSocket();
-            fileServer.sendDirStruct();
-            fileServer.sendFile();
+            ServerFileThread serverThread = new ServerFileThread(port, path);
+            serverThread.start();
         }
     }
 
 
     public static void main(String[] args) {
         new SyncFrameServer();
-
     }
 }
