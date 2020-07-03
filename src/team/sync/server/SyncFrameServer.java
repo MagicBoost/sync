@@ -36,6 +36,7 @@ public class SyncFrameServer extends JFrame {
         iPText.setText("127.0.0.1");
         portText.setText("5000");
         optionComboBox.addItem("实时同步");
+        optionComboBox.addItem("每30秒同步");
         optionComboBox.addItem("每小时同步");
         optionComboBox.addItem("每天同步");
 
@@ -119,16 +120,9 @@ public class SyncFrameServer extends JFrame {
                                 infoLabel.setText("同步中");
                                 //TODO 此处添加同步操作
 
+                                TCPServerFile fileServer = new TCPServerFile(port, path);
+                                fileServer.serverStart();
 
-                                System.out.println(ip);
-                                System.out.println(tempIp);
-                                System.out.println(runningIp);
-
-
-                                infoLabel.setText("同步暂停");
-                                if (option.equals("实时同步")) Thread.sleep(10000);
-                                else if (option.equals("每小时同步")) Thread.sleep(3600000);
-                                else Thread.sleep(86400000);
                             }
                             syncBool = true;
 

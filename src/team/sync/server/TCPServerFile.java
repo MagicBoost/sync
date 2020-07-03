@@ -33,7 +33,7 @@ public class TCPServerFile {
 	/**
  	 * 创建套接字，获取输入输出流
  	 */
-	public void createSocket() {
+	private void createSocket() {
 		try {
 			// 创建服务，启动监听
 			serverSocket = new ServerSocket(port);
@@ -54,7 +54,7 @@ public class TCPServerFile {
  	 * 将目录发送到客户端
  	 * 辅助方法遍历目录
  	 */
-	public void sendDirStruct() {
+	private void sendDirStruct() {
     	File src = new File(dirName);
     	String child[] = src.list(); // 获取dirName目录下的文件
     	try {
@@ -124,7 +124,7 @@ public class TCPServerFile {
  	/**
   	 * 发送文件和相对路径
   	 */
- 	public void sendFile() {
+ 	private void sendFile() {
 		reInitConn();
 		// final int MAX_BUFFER = 1000;
     	byte [] data = null;
@@ -162,10 +162,6 @@ public class TCPServerFile {
     			outStream.flush();
 
     			// 发送文件内容
-//    			if(fileSize > MAX_BUFFER)
-//    		  		bufferSize = MAX_BUFFER;
-//    			else
-//    		  		bufferSize = (int)fileSize;
 				bufferSize = (int)fileSize;
 
     			data = new byte[bufferSize];
@@ -186,7 +182,6 @@ public class TCPServerFile {
     				if(totalBytesRead == fileSize)
     					break;
     				// 更新文件大小以获取最后剩余的数据块
-    				//if((fileSize - totalBytesRead) < MAX_BUFFER)
 					bufferSize = (int) (fileSize - totalBytesRead);
     			
     				// 重置缓冲区
@@ -227,6 +222,12 @@ public class TCPServerFile {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void serverStart() {
+		createSocket();
+		sendDirStruct();
+		sendFile();
 	}
 
 	public static void main(String[] args) {

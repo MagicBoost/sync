@@ -27,7 +27,7 @@ public class TCPClientFile {
      * 创建套接字的方法
      * 获取输入和输出流
      */
-    public void createSocket() {
+    private void createSocket() {
         try {
             // 连接
             socket = new Socket("127.0.0.1", port);
@@ -45,7 +45,7 @@ public class TCPClientFile {
      * 接收目录结构的方法
      * 它在backupdir中创建接收的目录结构
      */
-    public void receiveDirStruct() {
+    private void receiveDirStruct() {
         try {
             int dirNo = inStream.read(); // 接收文件数
       
@@ -67,7 +67,7 @@ public class TCPClientFile {
     }
     
    
-    public void receiveFile() {
+    private void receiveFile() {
 	    reInitConn();
 	    // final int MAX_BUFFER = 1000;
 	    byte[] data = null;
@@ -91,10 +91,6 @@ public class TCPClientFile {
                 int bufferSize;
 
                 // 决定输入缓冲区大小
-//                if(fileSize > MAX_BUFFER)
-//                    bufferSize = MAX_BUFFER;
-//                else
-//                    bufferSize = (int)fileSize;
                 bufferSize = (int)fileSize;
                 data = new byte[bufferSize];
 
@@ -120,7 +116,6 @@ public class TCPClientFile {
                         break;
 
                     // 更新文件大小以获取最后剩余的数据块
-                    //if((fileSize - totalBytesRead) < MAX_BUFFER)
                     bufferSize = (int) (fileSize - totalBytesRead);
                 
                     // 重置缓冲区
@@ -153,7 +148,6 @@ public class TCPClientFile {
 		    inStream.close();
 		    outStream.close();
 		    socket.close();
-		    //socket = new Socket("192.168.1.93" , port);
             socket = new Socket("127.0.0.1" , port);
 		    outStream = new DataOutputStream(socket.getOutputStream());
 		    inStream = new DataInputStream(socket.getInputStream());
@@ -163,10 +157,9 @@ public class TCPClientFile {
 	    }
     }
 
-    public static void main(String[] args) throws Exception {
-        TCPClientFile fileClient = new TCPClientFile(6002, "C:\\distr_exp\\FileSync\\res");
-        fileClient.createSocket();
-        fileClient.receiveDirStruct();
-        fileClient.receiveFile();
+    public void clientStart() {
+        createSocket();
+        receiveDirStruct();
+        receiveFile();
     }
 }
