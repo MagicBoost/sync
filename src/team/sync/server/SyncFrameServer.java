@@ -119,12 +119,9 @@ public class SyncFrameServer extends JFrame {
                             while (tempIp == null && tempPort == 0 && tempPath == null && tempOption == null) {
                                 infoLabel.setText("同步中");
                                 //TODO 此处添加同步操作
+
                                 TCPServerFile fileServer = new TCPServerFile(port, path);
                                 fileServer.serverStart();
-
-                                System.out.println(ip);
-                                System.out.println(tempIp);
-                                System.out.println(runningIp);
 
                             }
                             syncBool = true;

@@ -119,13 +119,9 @@ public class SyncFrameClient extends JFrame {
                             while (tempIp == null && tempPort == 0 && tempPath == null && tempOption == null) {
                                 infoLabel.setText("同步中");
                                 //TODO 此处添加同步操作
+
                                 TCPClientFile fileClient = new TCPClientFile(port, path);
                                 fileClient.clientStart();
-
-                                System.out.println(ip);
-                                System.out.println(tempIp);
-                                System.out.println(runningIp);
-
 
                                 infoLabel.setText("同步暂停");
                                 if (option.equals("实时同步")) Thread.sleep(10000);
